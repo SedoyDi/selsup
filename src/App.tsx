@@ -1,54 +1,41 @@
 import { useState } from "react";
 
-
-interface ParamValueProps {
-  paramId: number;
+interface ParamProps {
+  id: number;
+  name: string;
   value: string;
   updateParamValue: (paramIdToUpdate: number, newValue: string) => void;
 }
-interface ParamNameProps {
-  name: string
-}
-// компонент имени изменяемого значения
-function ParamName({ name }: ParamNameProps): JSX.Element {
-  return (
-    <li>
-      <h2 style={{ margin: 0 }}>{name}</h2>
-    </li>
-
-  );
-}
-
-// компонент изменяемого значения
-function ParamValue({
-  paramId,
-  value,
-  updateParamValue,
-}: ParamValueProps): JSX.Element {
+function Param({ id, value,
+  updateParamValue, name }: ParamProps): JSX.Element {
   const [inputValue, setInputValue] = useState(value);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setInputValue(e.target.value);
   }
-
   return (
-    <li>
+    <li style={{
+      display: "flex",
+      alignItems: "center",
+      gap: "10px",
+    }}>
+      <label style={{ fontSize: "20px", fontWeight: "bold", minWidth: "150px" }}>{name}</label>
       <input
-        className="app__paramValue"
         type="text"
         value={inputValue}
         onChange={handleChange}
         onKeyDown={(e) => {
           if (e.key === "Enter") {
             e.preventDefault();
-            updateParamValue(paramId, inputValue);
+            updateParamValue(id, inputValue);
           }
         }}
       />
+
     </li>
+
   );
 }
-
 
 function App(): JSX.Element {
   const params: { id: number; name: string }[] = [
@@ -61,8 +48,7 @@ function App(): JSX.Element {
       name: "Длина",
     },
   ];
-
-  const [paramValues, setParamValues] = useState([
+  const paramValues: { paramId: number, value: string }[] = [
     {
       paramId: 1,
       value: "повседневное",
@@ -71,11 +57,12 @@ function App(): JSX.Element {
       paramId: 2,
       value: "макси",
     },
-  ]);
+  ]
+  const [paramsStore, setParamsStore] = useState(paramValues);
 
   const updateParamValue = (paramIdToUpdate: number, newValue: string) => {
-    setParamValues((prevParamValues) =>
-      prevParamValues.map((param) =>
+    setParamsStore((params) =>
+      params.map((param) =>
         param.paramId === paramIdToUpdate
           ? { ...param, value: newValue }
           : param
@@ -100,32 +87,17 @@ function App(): JSX.Element {
           margin: 0,
           display: "flex",
           flexDirection: "column",
-          justifyContent: "end",
-          gap: "8px",
+          alignItems: "center",
+          gap: "20px",
         }}
       >
-        {params.map((param) => (
-          <ParamName key={param.id} name={param.name} />
-        ))}
-      </ul>
-      <ul
-        style={{
-          listStyle: "none",
-          padding: 0,
-          margin: 0,
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "end",
-          marginBottom: "5px",
-          gap: "13px",
-        }}
-      >
-        {paramValues.map((paramValue) => (
-          <ParamValue
-            key={paramValue.paramId}
-            paramId={paramValue.paramId}
+        {paramsStore.map((param) => (
+          <Param
+            key={param.paramId}
+            name={(params.find((p) => p.id === param.paramId) || { name: "" }).name}
+            value={param.value}
+            id={param.paramId}
             updateParamValue={updateParamValue}
-            value={paramValue.value}
           />
         ))}
       </ul>
