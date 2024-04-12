@@ -6,7 +6,6 @@ interface ParamProps {
     value: string;
     updateParamValue: (paramIdToUpdate: number, newValue: string) => void;
 }
-
 class Param extends Component<ParamProps> {
     state = {
         inputValue: this.props.value,
@@ -24,6 +23,7 @@ class Param extends Component<ParamProps> {
     };
 
     render() {
+
         const { name } = this.props;
         const { inputValue } = this.state;
 
@@ -52,6 +52,16 @@ class App extends Component {
                 paramId: 2,
                 value: "макси",
             },
+        ],
+        params: [
+            {
+                id: 1,
+                name: "Назначение",
+            },
+            {
+                id: 2,
+                name: "Длина",
+            },
         ]
     };
 
@@ -67,17 +77,6 @@ class App extends Component {
     };
 
     render() {
-        const params: { id: number; name: string }[] = [
-            {
-                id: 1,
-                name: "Назначение",
-            },
-            {
-                id: 2,
-                name: "Длина",
-            },
-        ];
-
         return (
             <div
                 style={{
@@ -103,7 +102,7 @@ class App extends Component {
                         <Param
                             key={param.paramId}
                             name={
-                                (params.find((p) => p.id === param.paramId) || { name: "" }).name
+                                (this.state.params.find((p) => p.id === param.paramId) || { name: "" }).name
                             }
                             value={param.value}
                             id={param.paramId}
