@@ -17,11 +17,10 @@ function Param({ id, value,
         <li style={{
             display: "flex",
             alignItems: "center",
-            gap: "20px",
+            gap: "10px",
         }}>
-            <h2 style={{ margin: 0, minWidth: "150px" }}>{name}</h2>
+            <label style={{ fontSize: "20px", fontWeight: "bold", minWidth: "150px" }}>{name}</label>
             <input
-                className="app__paramValue"
                 type="text"
                 value={inputValue}
                 onChange={handleChange}
@@ -32,6 +31,7 @@ function Param({ id, value,
                     }
                 }}
             />
+
         </li>
 
     );
